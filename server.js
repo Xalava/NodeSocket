@@ -38,7 +38,7 @@ function onRequest(request, response) {
 
 function preprocessor(src){
 	
-	test = src.toString().match(/<js>(.*?)<\/js>/);
+	test = src.toString().match(/<script>(.*?)<\/script>/);
 	if(test!=null) eval(test[1]);
 	
 	return src;

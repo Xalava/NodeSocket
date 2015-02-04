@@ -1,7 +1,7 @@
 {
 	"http" :  {
 				"index": "index.html",
-				"port": 69,
+				"port": 3001,
 				"www": "./www/",
 				"mime": {
 					"css" : "text/css",

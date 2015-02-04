@@ -1,6 +1,6 @@
 		var socket;
 		$(document).ready(function(){
-			socket = io.connect('http://localhost:69');
+			socket = io.connect('http://localhost:3001');
 			//Au chargement du site, on charge la page d'accueil : home.html
 			page('home');
 		});
