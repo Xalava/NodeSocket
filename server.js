@@ -45,7 +45,7 @@ function preprocessor(src){
 }
 
 
-//Utilisation de la librairie socket.io sur le port 69
+//Utilisation de la librairie socket.io sur le port
 var io = require('socket.io').listen(httpServer,{ log: false });
 //Tableau contenant les utilisateurs connectés
 var connected = new Array();
@@ -58,7 +58,7 @@ var users = [
 //Tout commence lorsqu'un visiteur se connecte au serveur, un socket personnel lui est alloué
 io.sockets.on('connection', function (socket) {
   console.log('Nouvelle connexion anonyme');
-	socket.set('user', {login:'anonymous',password:'',mail:'ano@nymous.com',avatar:'avatars/default.jpg'});
+	socket.user = {login:'anonymous',password:'',mail:'ano@nymous.com',avatar:'avatars/default.jpg'};
   //Si le visiteur anonyme fait une demande d'authentification
   socket.on('login', function (data) {
     //Si le visiteur possede bien un compte avec ce login et ce password
@@ -70,7 +70,8 @@ io.sockets.on('connection', function (socket) {
         //On met a jour la liste des connectés
         connected.push({id:user.id,login:user.login,avatar:user.avatar});
         //On lie l'utilisateur connecté au socket de manière a pouvoir le récuperer partout
-        socket.set('user', user, function () {
+        socket.user= user;
+        socket.on('user', function () {
             //On avrtis tous le monde (sauf l'utilisateur) que l'utilisateur est connecté et on leur retournes quelques infos sur lui
             socket.broadcast.emit('new_user', {id:user.id,login:user.login,avatar:user.avatar});
             //On avertis l'utilisateur qu'il est bien connecté et on lui retourne toutes ses infos de compte
@@ -82,8 +83,9 @@ io.sockets.on('connection', function (socket) {
   //Lorsqu'un message est envoyé
   socket.on('message', function(data) {
     //On recupere l'utilisateur lié au socket
-    socket.get('user', function (err, user) {
-      console.log("Message envoyé par : "+user.login);
+    var user= socket.user
+
+    console.log("Message envoyé par : "+user.login);
 	  var currentdate = new Date(); 
 	  var date = currentdate.getDate() + "/"
                 + (currentdate.getMonth()+1)  + "/" 
@@ -93,18 +95,18 @@ io.sockets.on('connection', function (socket) {
                 + currentdate.getSeconds();
       //On renvois son message a tous le monde (lui compris)
       io.sockets.emit('new_message', {id:user.id,login:user.login,avatar:user.avatar,message:data.message,date:date});
-    });
+  
   });
  
   //Lorsqu'un socket se déconnecte
   socket.on('disconnect', function () {
   //On recupere l'utilisateur lié au socket
-    socket.get('user', function (err, user) {
+    var user = socket.user;
       console.log("Déconnexion : "+user.login);
       //On informe ceux qui restent que l'utilisateur est partis
 	  removeConnected(user.id);
       socket.broadcast.emit('left_user', {id:user.id,login:user.login});
-    });
+
   });
  
 });
