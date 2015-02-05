@@ -1,0 +1,23 @@
+{
+	"http" :  {
+				"index": "index.html",
+				"port": 3000,
+				"www": "./www",
+				"mime": {
+					"css" : "text/css",
+					"gif" : "image/gif",
+					"jpg" : "image/jpeg",
+					"jpeg": "image/jpeg",
+					"js"  : "application/javascript",
+					"ttf"  : "font/ttf",
+					"png" : "image/png"
+				},
+				"error" : {
+					"404" : "404.html"
+				}
+			},	
+	"users" : {
+				"john": {"email":"john@gmail.com","password":"john"},
+				"jane": {"email":"jane@gmail.com","password":"jane"}
+			}
+}
