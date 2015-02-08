@@ -50,8 +50,9 @@ io.sockets.on('connection', function(socket){
   socket.user = {login:'anonymous',password:'',mail:'ano@nymous.com',avatar:'avatars/default.jpg'};
 
   socket.on('login', function(credentials){
-  console.log("hi!"+credentials.login);
   var user = exist(credentials.login,credentials.password);
+  console.log("hi!"+credentials.login);
+  
     if(user!=false){
 //utilisateur authentifié
   console.log("Connexion authentifiée : "+user.login);
@@ -59,15 +60,30 @@ io.sockets.on('connection', function(socket){
   connected.push({id:user.id,login:user.login,avatar:user.avatar});
   //On lie l'utilisateur connecté au socket de manière a pouvoir le récuperer partout
   socket.user= user;
+
   socket.on('user', function () {
   //On avrtis tous le monde (sauf l'utilisateur) que l'utilisateur est connecté et on leur retournes quelques infos sur lui
   socket.broadcast.emit('new_user', {id:user.id,login:user.login,avatar:user.avatar});
   //On avertis l'utilisateur qu'il est bien connecté et on lui retourne toutes ses infos de compte
   socket.emit('connected', {connected:connected,user:user});
-});
-}
+  });
 
 
+  }
+
+
+  });
+  socket.on('message', function(data){
+     console.log("Message envoyé par : "+socket.user.login);
+var currentdate = new Date();
+var date = currentdate.getDate() + "/"
++ (currentdate.getMonth()+1) + "/"
++ currentdate.getFullYear() + " @ "
++ currentdate.getHours() + ":"
++ currentdate.getMinutes() + ":"
++ currentdate.getSeconds();
+//On renvois son message a tous le monde (lui compris)
+io.sockets.emit('new_message', {id:socket.user.id,login:socket.user.login,avatar:socket.user.avatar,message:data.message,date:date});
   });
 	console.log('New connection');
 });
