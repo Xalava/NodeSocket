@@ -1,0 +1,34 @@
+<h1><i class="icon-chat"></i> Chat</h1>
+<hr/>
+	<script>console.log('test');</script>
+	<div id="login-container">
+	<span id="signinButton">
+<!-- user var -->
+<%- user %>	  
+<a href="auth/google">Sign On with Google</a>
+	</span>
+		<input type="text" placeholder="Identifiant" id="login">
+		<input type="password" placeholder="Mot de passe" id="password"> <button onclick="send_login();">Connexion</button>
+	</div>
+	
+	<div class="chat-container" >
+	<div class="write_bloc">	
+	<img src="avatars/default.jpg" class="avatar" id="chat-avatar">
+	<textarea type="text" placeHolder="Bafouillez Ici..." id="chat-message"></textarea>
+	</div>
+	
+	
+	
+	<ul id="chat-messages"></ul>
+	<ul id="chat-users"></ul>
+	
+	<li style="display:none;" id="chat-message-template">
+	<div class="chat-message-avatar">
+	</div>
+	<div class="chat-message-body">
+	<span class="chat-message-login"><login/> <span class="chat-message-date">- <date/></span></span>
+	<p class="chat-message-message"><message/></p>
+	</div>
+	</li>
+	
+</div>
