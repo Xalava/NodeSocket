@@ -17,6 +17,12 @@
 <li onclick="page('about');"><i class="icon-about"></i></li>
 </ul>
 <div class="window-content">
+<% if (typeof user !== 'undefined') { %>
+<p> user connected</p>
+ <p><%- user[0].displayName %>
+<% } %>
+
+
 <section class="window-page"></section>
 <div class="preloader"></div>
 </div>

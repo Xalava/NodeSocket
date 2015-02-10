@@ -61,7 +61,7 @@ var app = express();
   app.use(express.cookieParser());
   //app.use(express.bodyParser());
   app.use(express.methodOverride());
-  app.use(express.session({ secret: 'keyboard cat' }));
+  app.use(express.session({ secret: 'keyboard cat', cookie: { maxAge: 60000 }}));
   // Initialize Passport!  Also use passport.session() middleware, to support
   // persistent login sessions (recommended).
   app.use(passport.initialize());
@@ -71,8 +71,20 @@ var app = express();
 
   app.locals.inspect = require('util').inspect;
 
+app.use(function(req,res,next){
+  var userSession = req.session.user;
+
+  if (!userSession) {
+    userSession = req.session.views = {}
+  }
+});
 app.get('/', function(req,res){
-  res.render('index');
+  if(!req.session.user) {
+    req.session.user = [{
+
+    }];
+  }
+  res.render('index', {user : req.session.user});
 
   //to get parser from data    var form = new multiparty.Form();
 
@@ -100,10 +112,13 @@ app.get('/user', function(req,res){
 app.get('/auth/google/return', 
   passport.authenticate('google', { failureRedirect: '/login' }),
   function(req, res) {
+    //on remet l'utilisateur dans la session//
+    req.session.user = [];
+    req.session.user.push({'displayName':req.user.displayName});
     res.redirect('/');
   });
 app.get('/account', ensureAuthenticated, function(req, res){
-  console.log("account"+req);
+  
   res.render('account', { user: req.user });
 });
 app.listen(httpServer);
